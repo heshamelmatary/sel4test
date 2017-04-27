@@ -220,7 +220,7 @@ send_init_data(env_t env, seL4_CPtr endpoint, sel4utils_process_t *process)
 }
 
 /* copy the caps required to set up the sel4platsupport default timer */
-static void
+UNUSED static void
 copy_timer_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_process)
 {
     /* Copy PS default timer's IRQ cap to child process. */
@@ -235,10 +235,10 @@ copy_timer_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_pro
     ZF_LOGF_IF(init->timer_dev_ut_cap == 0,
                "Failed to copy PS default timer device-ut to test child.");
 
-    arch_copy_timer_caps(init, env, test_process);
+    //arch_copy_timer_caps(init, env, test_process);
 }
 
-static void
+UNUSED static void
 copy_serial_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_process)
 {
     init->serial_irq_cap = copy_cap_to_process(test_process,
@@ -247,7 +247,7 @@ copy_serial_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_pr
                "Failed to copy PS default serial IRQ cap to test child "
                "process.");
 
-    arch_copy_serial_caps(init, env, test_process);
+    //arch_copy_serial_caps(init, env, test_process);
 }
 
 /* Run a single test.
@@ -283,8 +283,8 @@ run_test(struct testcase *test)
     env.init->cores = simple_get_core_count(&env.simple);
     /* setup data about untypeds */
     env.init->untypeds = copy_untypeds_to_process(&test_process, untypeds, num_untypeds);
-    copy_timer_caps(env.init, &env, &test_process);
-    copy_serial_caps(env.init, &env, &test_process);
+    //copy_timer_caps(env.init, &env, &test_process);
+    //copy_serial_caps(env.init, &env, &test_process);
     /* copy the fault endpoint - we wait on the endpoint for a message
      * or a fault to see when the test finishes */
     seL4_CPtr endpoint = copy_cap_to_process(&test_process, test_process.fault_endpoint.cptr);
@@ -301,7 +301,7 @@ run_test(struct testcase *test)
     /* ensure string is null terminated */
     env.init->name[TEST_NAME_MAX - 1] = '\0';
 #ifdef CONFIG_DEBUG_BUILD
-    seL4_DebugNameThread(test_process.thread.tcb.cptr, env.init->name);
+    //seL4_DebugNameThread(test_process.thread.tcb.cptr, env.init->name);
 #endif
 
     /* set up args for the test process */
@@ -309,6 +309,7 @@ run_test(struct testcase *test)
     char sel4test_name[] = { TESTS_APP };
     char *argv[] = {sel4test_name, endpoint_string};
     snprintf(endpoint_string, WORD_STRING_SIZE, "%lu", (unsigned long)endpoint);
+
     /* spawn the process */
     error = sel4utils_spawn_process_v(&test_process, &env.vka, &env.vspace,
                             ARRAY_SIZE(argv), argv, 1);
@@ -344,7 +345,7 @@ run_test(struct testcase *test)
     return result;
 }
 
-static void
+UNUSED static void
 init_timer_caps(env_t env)
 {
     int error;
@@ -470,7 +471,7 @@ int main(void)
     seL4_BootInfo *info = platsupport_get_bootinfo();
 
 #ifdef CONFIG_DEBUG_BUILD
-    seL4_DebugNameThread(seL4_CapInitThreadTCB, "sel4test-driver");
+    //seL4_DebugNameThread(seL4_CapInitThreadTCB, "sel4test-driver");
 #endif
 
     compile_time_assert(init_data_fits_in_ipc_buffer, sizeof(test_init_data_t) < PAGE_SIZE_4K);
@@ -505,7 +506,7 @@ int main(void)
     /* init_timer_caps calls acpi_init(), which does unconditional printfs,
      * so it can't go before platsupport_serial_setup_simple().
      */
-    init_timer_caps(&env);
+    //init_timer_caps(&env);
     simple_print(&env.simple);
 
     /* switch to a bigger, safer stack with a guard page

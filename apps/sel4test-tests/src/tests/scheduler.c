@@ -273,7 +273,7 @@ test_suspend(struct env* env)
 
     return sel4test_get_result();
 }
-DEFINE_TEST(SCHED0003, "Test TCB suspend/resume", test_suspend)
+//DEFINE_TEST(SCHED0003, "Test TCB suspend/resume", test_suspend)
 
 #endif /* !CONFIG_FT */
 

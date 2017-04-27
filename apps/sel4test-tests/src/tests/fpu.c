@@ -132,7 +132,7 @@ test_fpu_multithreaded(struct env* env)
 
     return sel4test_get_result();
 }
-DEFINE_TEST(FPU0001, "Ensure multiple threads can use FPU simultaneously", test_fpu_multithreaded)
+//DEFINE_TEST(FPU0001, "Ensure multiple threads can use FPU simultaneously", test_fpu_multithreaded)
 #endif /* CONFIG_FT */
 
 #if CONFIG_MAX_NUM_NODES > 1 && defined(CONFIG_HAVE_TIMER)
