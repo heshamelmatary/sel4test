@@ -204,7 +204,7 @@ send_init_data(env_t env, seL4_CPtr endpoint, sel4utils_process_t *process)
 }
 
 /* copy the caps required to set up the sel4platsupport default timer */
-static void
+UNUSED static void
 copy_timer_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_process)
 {
     /* Copy PS default timer's IRQ cap to child process. */
@@ -219,10 +219,10 @@ copy_timer_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_pro
     ZF_LOGF_IF(init->timer_dev_ut_cap == 0,
                "Failed to copy PS default timer device-ut to test child.");
 
-    arch_copy_timer_caps(init, env, test_process);
+    //arch_copy_timer_caps(init, env, test_process);
 }
 
-static void
+UNUSED static void
 copy_serial_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_process)
 {
     init->serial_irq_cap = sel4utils_copy_cap_to_process(test_process, &env->vka,
@@ -231,7 +231,7 @@ copy_serial_caps(test_init_data_t *init, env_t env, sel4utils_process_t *test_pr
                "Failed to copy PS default serial IRQ cap to test child "
                "process.");
 
-    arch_copy_serial_caps(init, env, test_process);
+    //arch_copy_serial_caps(init, env, test_process);
 }
 
 /* Run a single test.
@@ -267,8 +267,8 @@ run_test(struct testcase *test)
     env.init->cores = simple_get_core_count(&env.simple);
     /* setup data about untypeds */
     env.init->untypeds = copy_untypeds_to_process(&test_process, untypeds, num_untypeds);
-    copy_timer_caps(env.init, &env, &test_process);
-    copy_serial_caps(env.init, &env, &test_process);
+    //copy_timer_caps(env.init, &env, &test_process);
+    //copy_serial_caps(env.init, &env, &test_process);
     /* copy the fault endpoint - we wait on the endpoint for a message
      * or a fault to see when the test finishes */
     seL4_CPtr endpoint = sel4utils_copy_cap_to_process(&test_process, &env.vka, test_process.fault_endpoint.cptr);
@@ -426,7 +426,7 @@ int main(void)
     /* init_timer_caps calls acpi_init(), which does unconditional printfs,
      * so it can't go before platsupport_serial_setup_simple().
      */
-    sel4platsupport_init_default_timer_caps(&env.vka, &env.vspace, &env.simple, &env.timer_objects);
+    //sel4platsupport_init_default_timer_caps(&env.vka, &env.vspace, &env.simple, &env.timer_objects);
     simple_print(&env.simple);
 
     /* switch to a bigger, safer stack with a guard page
