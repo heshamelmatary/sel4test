@@ -20,10 +20,10 @@
 #include <sel4/sel4.h>
 #include <sel4/types.h>
 
-#include <sel4platsupport/timer.h>
-#include <sel4platsupport/plat/serial.h>
-#include <sel4platsupport/plat/timer.h>
-#include <platsupport/timer.h>
+//#include <sel4platsupport/timer.h>
+//#include <sel4platsupport/plat/serial.h>
+//#include <sel4platsupport/plat/timer.h>
+//#include <platsupport/timer.h>
 
 #include <sel4utils/util.h>
 #include <sel4utils/mapping.h>
@@ -145,11 +145,13 @@ init_allocator(env_t env, test_init_data_t *init_data)
      * We don't add the serial frame because it's not an untyped.
      * It is passed to the child as an already-retyped frame object.
      */
+/*
     size_bits = seL4_PageBits;
     vka_cspace_make_path(&env->vka, init_data->timer_dev_ut_cap, &path);
     error = allocman_utspace_add_uts(allocator, 1, &path, &size_bits,
                                      &init_data->timer_paddr, ALLOCMAN_UT_DEV);
     ZF_LOGF_IF(error, "Failed to add timer ut to allocator");
+*/
 
     /* add any arch specific objects to the allocator */
     arch_init_allocator(env, init_data);
@@ -184,10 +186,12 @@ get_irq(void *data, int irq, seL4_CNode root, seL4_Word index, uint8_t depth)
 {
     test_init_data_t *init = (test_init_data_t *) data;
 
+#if 0
     if (irq == DEFAULT_TIMER_INTERRUPT) {
         return seL4_CNode_Copy(root, index, depth, init->root_cnode,
                                 init->timer_irq_cap, seL4_WordBits, seL4_AllRights);
     }
+
     /* Though none of our serial drivers currently use their IRQ, it makes sense
      * to also intercept the serial IRQ, because we'll have drivers using them
      * soon.
@@ -197,10 +201,12 @@ get_irq(void *data, int irq, seL4_CNode root, seL4_Word index, uint8_t depth)
                                init->root_cnode, init->serial_irq_cap, seL4_WordBits,
                                seL4_AllRights);
     }
+#endif
 
     return plat_get_irq(data, irq, root, index, depth);
 }
 
+#if 0
 void init_timer(env_t env, test_init_data_t *init_data)
 {
     /* minimal simple implementation to get the platform
@@ -229,6 +235,7 @@ void init_timer(env_t env, test_init_data_t *init_data)
      */
     plat_init_env(env, init_data);
 }
+#endif
 
 int
 main(int argc, char **argv)
@@ -252,7 +259,7 @@ main(int argc, char **argv)
     env.cspace_size_bits = init_data->cspace_size_bits;
     env.tcb = init_data->tcb;
     env.domain = init_data->domain;
-    env.timer_untyped = init_data->timer_dev_ut_cap;
+    //env.timer_untyped = init_data->timer_dev_ut_cap;
     env.asid_pool = init_data->asid_pool;
     env.asid_ctrl = init_data->asid_ctrl;
 #ifdef CONFIG_IOMMU
@@ -269,7 +276,7 @@ main(int argc, char **argv)
     init_allocator(&env, init_data);
 
     /* initialise the timer */
-    init_timer(&env, init_data);
+    //init_timer(&env, init_data);
 
     /* find the test */
     testcase_t *test = find_test(init_data->name);

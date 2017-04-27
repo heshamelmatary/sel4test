@@ -273,7 +273,7 @@ test_suspend(struct env* env)
 
     return sel4test_get_result();
 }
-DEFINE_TEST(SCHED0003, "Test TCB suspend/resume", test_suspend)
+//DEFINE_TEST(SCHED0003, "Test TCB suspend/resume", test_suspend)
 
 #endif /* !CONFIG_FT */
 
@@ -342,7 +342,7 @@ test_all_priorities(struct env* env)
 
     return sel4test_get_result();
 }
-DEFINE_TEST(SCHED0004, "Test threads at all priorities", test_all_priorities)
+//DEFINE_TEST(SCHED0004, "Test threads at all priorities", test_all_priorities)
 
 #define SCHED0005_HIGHEST_PRIO (seL4_MaxPrio - 2)
 /*
